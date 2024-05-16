@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307
--- Tempo de geração: 16-Maio-2024 às 02:59
+-- Host: localhost:3307
+-- Tempo de geração: 16-Maio-2024 às 16:56
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -77,7 +77,7 @@ CREATE TABLE `tabela_quartos` (
   `quartos_numero` char(3) NOT NULL,
   `quartos_descricao` varchar(200) NOT NULL,
   `quartos_preco` decimal(5,2) NOT NULL,
-  `quartos_disponibilidade` varchar(20) DEFAULT NULL
+  `quartos_disponibilidade` varchar(20) DEFAULT 'disponivel'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -85,36 +85,36 @@ CREATE TABLE `tabela_quartos` (
 --
 
 INSERT INTO `tabela_quartos` (`quartos_id`, `quartos_numero`, `quartos_descricao`, `quartos_preco`, `quartos_disponibilidade`) VALUES
-(1, '101', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(2, '102', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(3, '103', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(4, '104', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(5, '105', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(6, '106', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(7, '107', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(8, '108', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(9, '109', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(10, '110', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(11, '201', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(12, '202', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(13, '203', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(14, '204', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(15, '205', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(16, '206', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(17, '207', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(18, '208', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(19, '209', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(20, '210', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(21, '301', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(22, '302', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(23, '303', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(24, '304', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(25, '305', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(26, '306', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(27, '307', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(28, '308', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(29, '309', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(30, '310', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel');
+(1, '101', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(2, '102', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(3, '103', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(4, '104', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(5, '105', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
+(6, '106', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
+(7, '107', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
+(8, '108', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
+(9, '109', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
+(10, '110', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
+(11, '201', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(12, '202', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(13, '203', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(14, '204', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(15, '205', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
+(16, '206', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
+(17, '207', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
+(18, '208', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
+(19, '209', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
+(20, '210', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
+(21, '301', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(22, '302', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(23, '303', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(24, '304', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
+(25, '305', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
+(26, '306', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
+(27, '307', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
+(28, '308', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
+(29, '309', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
+(30, '310', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel');
 
 -- --------------------------------------------------------
 
@@ -131,11 +131,19 @@ CREATE TABLE `tabela_reservas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Extraindo dados da tabela `tabela_reservas`
+--
+
+INSERT INTO `tabela_reservas` (`reservas_id`, `reservas_dataEntrada`, `reservas_dataSaida`, `reservas_clientesID`, `reservas_quartosID`) VALUES
+(5, '2024-05-14', '2024-05-18', 2, 1),
+(6, '2024-05-14', '2024-05-18', 2, 1);
+
+--
 -- Acionadores `tabela_reservas`
 --
 DELIMITER $$
 CREATE TRIGGER `disponibilidadeQuarto` AFTER INSERT ON `tabela_reservas` FOR EACH ROW begin
-	UPDATE tabela_quartos SET quartos_disponibilidade = 'Ocupado' WHERE quartos_id = quartos_id;
+	UPDATE tabela_quartos SET quartos_disponibilidade = 'ocupado' WHERE reservas_quartoID = quartos_id;
 end
 $$
 DELIMITER ;
@@ -196,7 +204,7 @@ ALTER TABLE `tabela_quartos`
 -- AUTO_INCREMENT de tabela `tabela_reservas`
 --
 ALTER TABLE `tabela_reservas`
-  MODIFY `reservas_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `reservas_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Restrições para despejos de tabelas
