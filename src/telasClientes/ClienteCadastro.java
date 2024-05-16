@@ -3,7 +3,6 @@ package telasClientes;
 import java.sql.*;
 import conexao.ModuloConexao;
 import javax.swing.JOptionPane;
-import telas.telaPrincipal;
 
 public class ClienteCadastro extends javax.swing.JInternalFrame {
     Connection conexao = null;

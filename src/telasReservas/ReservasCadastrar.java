@@ -5,6 +5,7 @@ import conexao.ModuloConexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -73,22 +74,21 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
     
     public void ReservaCadastrar(){
         try {
-            String sql = "INSERT INTO tabela_reservas (reservas_dataEntrada, reservas_dataSaida, reservas_quartosID, reservas_clientesID) VALUES (?,?,?,?)";
+            String sql = "INSERT INTO tabela_reservas (reservas_dataEntrada, reservas_dataSaida, reservas_clientesID, reservas_quartosID) VALUES (?,?,?,?)";
             pst = conexao.prepareStatement(sql);
             
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String dataEntrada = dateFormat.format(reservaDataEntrada.getDate());
             String dataSaida = dateFormat.format(reservaDataSaida.getDate());
             
-            Integer numeroQuartoID;
-            Integer numeroClienteID;
+            int numeroClienteID = Integer.parseInt(reservaClienteID.getText());
+            int numeroQuartoID = Integer.parseInt(reservaQuartoID.getText());
             
-            numeroQuartoID = Integer.valueOf(reservaQuartoID.getText());
-            numeroClienteID = Integer.valueOf(reservaClienteID.getText());
             pst.setString(1, dataEntrada);
             pst.setString(2, dataSaida);
-            pst.setInt(3, numeroQuartoID);
-            pst.setInt(4, numeroClienteID);
+            pst.setInt(3, numeroClienteID);
+            pst.setInt(4, numeroQuartoID);
+            
             
             JOptionPane.showMessageDialog(null, "Reserva efetuada com sucesso!");
         }
@@ -100,8 +100,8 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
         if (pst != null) {
             try {
                 pst.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } 
+            catch (SQLException e) {
             }
         }
     }
