@@ -222,7 +222,7 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
             }
         });
 
-        btnReservarCliente.setText("RESERVAR");
+        btnReservarCliente.setText("FAZER RESERVA");
         btnReservarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReservarClienteActionPerformed(evt);

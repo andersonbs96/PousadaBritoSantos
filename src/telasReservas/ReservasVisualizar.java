@@ -17,7 +17,6 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
         initComponents();
         conexao = ModuloConexao.conector();
         Reserva();
-        ContagemReserva();
     }
     
     private void Reserva(){
@@ -135,9 +134,9 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
     }
     
     private void ReservaCancelar() {
-        int conf = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir esta reserva?", "ATENÇÃO", JOptionPane.YES_NO_OPTION);
+        int conf = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir este usuario?", "ATENÇÃO", JOptionPane.YES_NO_OPTION);
         if (conf == JOptionPane.YES_OPTION){
-            String sql = "DELETE FROM tabela_reservas WHERE reservas_id=?";
+            String sql = "DELETE FROM tabela_clientes WHERE clientes_id=?";
             
             try {
                 pst = conexao.prepareStatement(sql);
@@ -145,7 +144,7 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                 int del = pst.executeUpdate();
                 
                 if (del > 0){
-                    JOptionPane.showMessageDialog(null, "Reserva deletada com sucesso!");
+                    JOptionPane.showMessageDialog(null, "Cliente deletado com sucesso!");
                     reservaDataEntrada.setDate(null);
                     reservaDataSaida.setDate(null);
                     reservaClienteID.setText(null);
@@ -155,28 +154,8 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                 }
             }
             catch (Exception e){
-                JOptionPane.showMessageDialog(null, "Não possível deletar essa reserva!");
+                JOptionPane.showMessageDialog(null, "Não possível deletar esse cliente!");
             }
-        }
-    }
-    
-    private void ContagemReserva(){
-        String sql = "SELECT COUNT(*) AS totalReservas FROM tabela_reservas";
-        try {
-            pst = conexao.prepareStatement(sql);
-            rs = pst.executeQuery();
-            
-            if(rs.next()){
-                int total = rs.getInt("totalReservas");
-                totalReserva.setText(Integer.toString(total));
-            }
-            else {
-                totalReserva.setText("0");
-                JOptionPane.showMessageDialog(null, "Nenhuma reserva encontrada!");
-            }
-        }
-        catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Não foi possível realizar a contagem de reservas");
         }
     }
     
@@ -213,8 +192,6 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaReservas = new javax.swing.JTable();
-        jLabel8 = new javax.swing.JLabel();
-        totalReserva = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("RESERVA");
@@ -436,10 +413,6 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                 .addGap(182, 182, 182))
         );
 
-        jLabel8.setText("Nº de Reservas");
-
-        totalReserva.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -448,13 +421,7 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addGap(12, 12, 12)
-                        .addComponent(totalReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -465,10 +432,6 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(totalReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -519,7 +482,6 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -532,6 +494,5 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
     private javax.swing.JTextField reservaQuartoID;
     private javax.swing.JTextField reservaQuartoNumero;
     private javax.swing.JTable tabelaReservas;
-    private javax.swing.JLabel totalReserva;
     // End of variables declaration//GEN-END:variables
 }
