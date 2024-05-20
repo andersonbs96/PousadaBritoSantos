@@ -68,8 +68,61 @@ public class ClientesVisualizar extends javax.swing.JInternalFrame {
         }
     }
     
+    public class CPFValidator {
+        public static boolean validarCPF(String cpf_str) {
+            // Verificar se o CPF tem 11 dígitos
+            if (cpf_str.length() != 11) {
+                JOptionPane.showMessageDialog(null, "CPF deve ter 11 dígitos. Tente novamente.");
+                return false;
+            }
+ 
+            char[] cpf_char = cpf_str.toCharArray();
+            int[] cpf_int = new int[cpf_char.length];
+ 
+            for (int i = 0; i < cpf_char.length; i++) {
+                cpf_int[i] = Character.getNumericValue(cpf_char[i]);
+            }
+ 
+            // Calcular o primeiro dígito verificador
+            int soma = 0;
+            for (int i = 0; i < 9; i++) {
+                soma += cpf_int[i] * (10 - i);
+            }
+            int primeiroDigito = 11 - (soma % 11);
+            if (primeiroDigito > 9) {
+                primeiroDigito = 0;
+            }
+ 
+            // Calcular o segundo dígito verificador
+            soma = 0;
+            for (int i = 0; i < 10; i++) {
+                soma += cpf_int[i] * (11 - i);
+            }
+            int segundoDigito = 11 - (soma % 11);
+            if (segundoDigito > 9) {
+                segundoDigito = 0;
+            }
+ 
+            // Verificar se os dígitos verificadores estão corretos
+            if (cpf_int[9] == primeiroDigito && cpf_int[10] == segundoDigito) {
+                JOptionPane.showMessageDialog(null, "CPF válido.");
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "CPF inválido. Tente novamente.");
+                return false;
+            }
+        }
+    }
+    
     private void AtualizarClientes(){
         String sql = "UPDATE tabela_clientes SET clientes_nome=?, clientes_cpf=?, clientes_endereco=?, clientes_ddd=?, clientes_telefone=?, clientes_cidade=?, clientes_estado=?, clientes_email=? WHERE clientes_id=?";
+        
+        String cpf = receberClienteCPF.getText();
+        boolean cpfValido = CPFValidator.validarCPF(cpf);
+        if (!cpfValido) {
+            JOptionPane.showMessageDialog(null, "CPF inválido. Por favor, insira um CPF válido.");
+            return;
+        }
         
         try {
             pst = conexao.prepareStatement(sql);
@@ -328,6 +381,7 @@ public class ClientesVisualizar extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        tabelaClientes.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tabelaClientes);
         if (tabelaClientes.getColumnModel().getColumnCount() > 0) {
             tabelaClientes.getColumnModel().getColumn(0).setPreferredWidth(30);

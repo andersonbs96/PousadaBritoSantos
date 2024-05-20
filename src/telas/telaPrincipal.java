@@ -7,6 +7,7 @@ import telasClientes.ClienteCadastro;
 import telasClientes.ClientesVisualizar;
 import telasQuartos.QuartosVisualizar;
 import telasReservas.ReservasCadastrar;
+import telasReservas.ReservasVisualizar;
 
 public class telaPrincipal extends javax.swing.JFrame {
 
@@ -28,7 +29,6 @@ public class telaPrincipal extends javax.swing.JFrame {
         menuReservas = new javax.swing.JMenu();
         itemReservasFazer = new javax.swing.JMenuItem();
         itemReservaVisualizar = new javax.swing.JMenuItem();
-        itemReservasCancelar = new javax.swing.JMenuItem();
         menuQuartos = new javax.swing.JMenu();
         itemQuartosDisponivel = new javax.swing.JMenuItem();
         menuSobre = new javax.swing.JMenu();
@@ -37,7 +37,6 @@ public class telaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pousada Brito Santos");
-        setPreferredSize(new java.awt.Dimension(1366, 768));
 
         javax.swing.GroupLayout DesktopLayout = new javax.swing.GroupLayout(Desktop);
         Desktop.setLayout(DesktopLayout);
@@ -92,9 +91,6 @@ public class telaPrincipal extends javax.swing.JFrame {
             }
         });
         menuReservas.add(itemReservaVisualizar);
-
-        itemReservasCancelar.setText("Cancelar");
-        menuReservas.add(itemReservasCancelar);
 
         jMenuBar1.add(menuReservas);
 
@@ -158,7 +154,7 @@ public class telaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_menuSairActionPerformed
 
     private void itemReservaVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemReservaVisualizarActionPerformed
-        telaVisualizar visualizar = new telaVisualizar();
+        ReservasVisualizar visualizar = new ReservasVisualizar();
         visualizar.setVisible(true);
         Desktop.add(visualizar);
     }//GEN-LAST:event_itemReservaVisualizarActionPerformed
@@ -240,7 +236,6 @@ public class telaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemOpcoesSair;
     private javax.swing.JMenuItem itemQuartosDisponivel;
     private javax.swing.JMenuItem itemReservaVisualizar;
-    private javax.swing.JMenuItem itemReservasCancelar;
     private javax.swing.JMenuItem itemReservasFazer;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;

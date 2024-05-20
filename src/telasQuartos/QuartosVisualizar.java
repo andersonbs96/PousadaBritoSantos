@@ -74,6 +74,7 @@ public class QuartosVisualizar extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        tabelaQuartos.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tabelaQuartos);
         if (tabelaQuartos.getColumnModel().getColumnCount() > 0) {
             tabelaQuartos.getColumnModel().getColumn(0).setResizable(false);

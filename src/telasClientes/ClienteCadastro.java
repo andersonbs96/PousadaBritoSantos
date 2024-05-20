@@ -12,38 +12,90 @@ public class ClienteCadastro extends javax.swing.JInternalFrame {
         initComponents();
         conexao = ModuloConexao.conector();
     }
-    
-    public void ClientesCadastrar(){
-        try {
-            String sql = "INSERT INTO tabela_clientes (clientes_nome, clientes_cpf, clientes_endereco, clientes_ddd, clientes_telefone, clientes_cidade, clientes_estado, clientes_email) VALUES (?,?,?,?,?,?,?,?)";
-            pst = conexao.prepareStatement(sql);
-            
-            pst.setString(1, clienteNome.getText());
-            pst.setString(2, clienteCPF.getText());
-            pst.setString(3, clienteEndereco.getText());
-            pst.setString(4, clienteDDD.getText());
-            pst.setString(5, clienteTelefone.getText());
-            pst.setString(6, clienteCidade.getText());
-            pst.setString(7, clienteEstado.getSelectedItem().toString());
-            pst.setString(8, clienteEmail.getText());
-            
-            int add = pst.executeUpdate();
-            if (add > 0){
-                JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
-                
-                clienteNome.setText(null);
-                clienteCPF.setText(null);
-                clienteEndereco.setText(null);
-                clienteDDD.setText(null);
-                clienteTelefone.setText(null);
-                clienteCidade.setText(null);
-                clienteEstado.setSelectedItem(null);
-                clienteEmail.setText(null);
+ 
+    public class CPFValidator {
+        public static boolean validarCPF(String cpf_str) {
+            // Verificar se o CPF tem 11 dígitos
+            if (cpf_str.length() != 11) {
+                JOptionPane.showMessageDialog(null, "CPF deve ter 11 dígitos. Tente novamente.");
+                return false;
+            }
+ 
+            char[] cpf_char = cpf_str.toCharArray();
+            int[] cpf_int = new int[cpf_char.length];
+ 
+            for (int i = 0; i < cpf_char.length; i++) {
+                cpf_int[i] = Character.getNumericValue(cpf_char[i]);
+            }
+ 
+            // Calcular o primeiro dígito verificador
+            int soma = 0;
+            for (int i = 0; i < 9; i++) {
+                soma += cpf_int[i] * (10 - i);
+            }
+            int primeiroDigito = 11 - (soma % 11);
+            if (primeiroDigito > 9) {
+                primeiroDigito = 0;
+            }
+ 
+            // Calcular o segundo dígito verificador
+            soma = 0;
+            for (int i = 0; i < 10; i++) {
+                soma += cpf_int[i] * (11 - i);
+            }
+            int segundoDigito = 11 - (soma % 11);
+            if (segundoDigito > 9) {
+                segundoDigito = 0;
+            }
+ 
+            // Verificar se os dígitos verificadores estão corretos
+            if (cpf_int[9] == primeiroDigito && cpf_int[10] == segundoDigito) {
+                JOptionPane.showMessageDialog(null, "CPF válido.");
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "CPF inválido. Tente novamente.");
+                return false;
             }
         }
-        catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Cliente não cadastrado");
+    }
+    private void ClientesCadastrar(){
+        String cpf = clienteCPF.getText();
+        boolean cpfValido = CPFValidator.validarCPF(cpf);
+        if (!cpfValido) {
+            JOptionPane.showMessageDialog(null, "CPF inválido. Por favor, insira um CPF válido.");
+            return;
         }
+        
+            try {
+                String sql = "INSERT INTO tabela_clientes (clientes_nome, clientes_cpf, clientes_endereco, clientes_ddd, clientes_telefone, clientes_cidade, clientes_estado, clientes_email) VALUES (?,?,?,?,?,?,?,?)";
+                pst = conexao.prepareStatement(sql);
+
+                pst.setString(1, clienteNome.getText());
+                pst.setString(2, clienteCPF.getText());
+                pst.setString(3, clienteEndereco.getText());
+                pst.setString(4, clienteDDD.getText());
+                pst.setString(5, clienteTelefone.getText());
+                pst.setString(6, clienteCidade.getText());
+                pst.setString(7, clienteEstado.getSelectedItem().toString());
+                pst.setString(8, clienteEmail.getText());
+
+                int add = pst.executeUpdate();
+                if (add > 0){
+                    JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
+
+                    clienteNome.setText(null);
+                    clienteCPF.setText(null);
+                    clienteEndereco.setText(null);
+                    clienteDDD.setText(null);
+                    clienteTelefone.setText(null);
+                    clienteCidade.setText(null);
+                    clienteEstado.setSelectedItem(null);
+                    clienteEmail.setText(null);
+                }
+            }
+            catch (Exception e){
+                JOptionPane.showMessageDialog(null, "Cliente não cadastrado");
+            }
     }
     
     public void ClienteCancelar() {

@@ -73,7 +73,8 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
     }
     
     public void ReservaCadastrar(){
-        try {
+        
+        try {   
             String sql = "INSERT INTO tabela_reservas (reservas_dataEntrada, reservas_dataSaida, reservas_clientesID, reservas_quartosID) VALUES (?,?,?,?)";
             pst = conexao.prepareStatement(sql);
             
@@ -89,22 +90,18 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
             pst.setInt(3, numeroClienteID);
             pst.setInt(4, numeroQuartoID);
             
+            int add = pst.executeUpdate();
             
-            JOptionPane.showMessageDialog(null, "Reserva efetuada com sucesso!");
-        }
-        catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Não foi possível realizar reservar");
-        }
-        finally {
-        // É importante fechar o PreparedStatement após o uso
-        if (pst != null) {
-            try {
-                pst.close();
-            } 
-            catch (SQLException e) {
+            if (add > 0){
+                JOptionPane.showMessageDialog(null, "Reserva efetuada com sucesso!");
+            }
+            else {
+               JOptionPane.showMessageDialog(null, "Não foi possível realizar reservar");
             }
         }
-    }
+        catch (Exception e){
+            JOptionPane.showMessageDialog(null,"Erro ao reservar!");
+        }
     }
     
     public void BuscarClienteNome(){
@@ -175,8 +172,6 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        reservaDataEntrada = new com.toedter.calendar.JDateChooser();
-        reservaDataSaida = new com.toedter.calendar.JDateChooser();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -192,6 +187,8 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
         jLabel9 = new javax.swing.JLabel();
         btnNumeroQuarto = new javax.swing.JButton();
         chkDisponibilidadeQuarto = new javax.swing.JButton();
+        reservaDataEntrada = new com.toedter.calendar.JDateChooser();
+        reservaDataSaida = new com.toedter.calendar.JDateChooser();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaQuartos = new javax.swing.JTable();
@@ -207,10 +204,6 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("RESERVA");
-
-        reservaDataEntrada.setDateFormatString("yyyy/MM/dd");
-
-        reservaDataSaida.setDateFormatString("yyyy/MM/dd");
 
         jLabel2.setText("Data de Entrada");
 
@@ -229,7 +222,7 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
             }
         });
 
-        btnReservarCliente.setText("FAZER RESERVA");
+        btnReservarCliente.setText("RESERVAR");
         btnReservarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReservarClienteActionPerformed(evt);
@@ -259,31 +252,30 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
             }
         });
 
+        reservaDataEntrada.setDateFormatString("yyyy/MM/dd");
+
+        reservaDataSaida.setDateFormatString("yyyy/MM/dd");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel9)
                     .addComponent(jLabel6)
                     .addComponent(jLabel1)
                     .addComponent(jLabel4)
-                    .addComponent(reservaClienteNome, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnReservarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(reservaClienteID, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBuscarCliente))
                     .addComponent(jLabel5)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(111, 111, 111)
-                        .addComponent(jLabel3))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(reservaQuartoNumero, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
@@ -293,10 +285,15 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnNumeroQuarto))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(reservaDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(reservaDataSaida, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(51, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(reservaDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(reservaDataSaida, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)))
+                    .addComponent(reservaClienteNome))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,15 +301,13 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(53, 53, 53)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(reservaDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(reservaDataSaida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addGap(4, 4, 4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reservaDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reservaDataSaida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

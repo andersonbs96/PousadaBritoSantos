@@ -1,9 +1,9 @@
 
-package telas;
+package telasPagamentos;
 
-public class telaPagamento extends javax.swing.JInternalFrame {
+public class PagamentosVisualizar extends javax.swing.JInternalFrame {
 
-    public telaPagamento() {
+    public PagamentosVisualizar() {
         initComponents();
     }
 
