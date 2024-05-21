@@ -1,10 +1,9 @@
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
--- Host: 127.0.0.1:3307
--- Tempo de geração: 20-Maio-2024 às 23:32
+--
 -- Host: localhost:3307
--- Tempo de geração: 16-Maio-2024 às 16:56
+-- Tempo de geração: 21-Maio-2024 às 17:01
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -22,11 +21,11 @@ SET time_zone = "+00:00";
 -- Banco de dados: `pousada`
 --
 
-DELIMITER //
+DELIMITER $$
 --
 -- Procedimentos
 --
-CREATE PROCEDURE `verificar_conflito_reserva` (IN `quarto_id` INT, IN `data_entrada` DATE, IN `data_saida` DATE)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verificar_conflito_reserva` (IN `quarto_id` INT, IN `data_entrada` DATE, IN `data_saida` DATE)   BEGIN
 	IF EXISTS (
         SELECT 1
         FROM tabela_reservas
@@ -39,8 +38,8 @@ CREATE PROCEDURE `verificar_conflito_reserva` (IN `quarto_id` INT, IN `data_entr
     ) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Conflito de reserva: As datas de entrada e saída se sobrepõem com outra reserva.';
     END IF;
-END;
-//
+END$$
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -106,6 +105,20 @@ INSERT INTO `tabela_clientes` (`clientes_id`, `clientes_nome`, `clientes_cpf`, `
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `tabela_pagamentos`
+--
+
+CREATE TABLE `tabela_pagamentos` (
+  `pagamentos_id` int(11) NOT NULL,
+  `pagamentos_reservasID` int(11) DEFAULT NULL,
+  `pagamentos_clientesID` int(11) DEFAULT NULL,
+  `pagamentos_valorTotal` decimal(10,2) NOT NULL,
+  `pagamentos_situacao` varchar(20) NOT NULL DEFAULT 'Pendente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `tabela_quartos`
 --
 
@@ -132,7 +145,7 @@ INSERT INTO `tabela_quartos` (`quartos_id`, `quartos_numero`, `quartos_descricao
 (8, '108', 'Quarto Simples com uma cama de casal', 250.00, 'Ocupado'),
 (9, '109', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
 (10, '110', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(11, '201', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
+(11, '201', 'Quarto Simples com duas camas de solteiro', 250.00, 'Reservado'),
 (12, '202', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
 (13, '203', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
 (14, '204', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
@@ -176,12 +189,15 @@ INSERT INTO `tabela_reservas` (`reservas_id`, `reservas_dataEntrada`, `reservas_
 (2, '2024-05-28', '2024-05-31', 1, 8),
 (4, '2024-05-22', '2024-05-26', 2, 5),
 (5, '2024-05-25', '2024-05-28', 3, 1),
-(6, '2024-05-24', '2024-05-28', 4, 2);
+(6, '2024-05-24', '2024-05-28', 4, 2),
+(7, '2024-07-08', '2024-07-12', 5, 11),
+(8, '2024-06-04', '2024-05-08', 6, 30),
+(9, '2024-05-13', '2024-05-16', 7, 12);
 
 --
 -- Acionadores `tabela_reservas`
 --
-DELIMITER //
+DELIMITER $$
 CREATE TRIGGER `atualizarDisponibilidade` AFTER UPDATE ON `tabela_reservas` FOR EACH ROW begin
 	IF new.reservas_dataEntrada <= CURRENT_DATE() and new.reservas_dataSaida > CURRENT_DATE() THEN
     	UPDATE tabela_quartos
@@ -197,10 +213,9 @@ CREATE TRIGGER `atualizarDisponibilidade` AFTER UPDATE ON `tabela_reservas` FOR 
         WHERE quartos_id = new.reservas_quartosID;
     END IF;
 end
-//
+$$
 DELIMITER ;
-
-DELIMITER //
+DELIMITER $$
 CREATE TRIGGER `disponibilidadeQuarto` AFTER INSERT ON `tabela_reservas` FOR EACH ROW begin
 	IF new.reservas_dataEntrada <= CURRENT_DATE() and new.reservas_dataSaida > CURRENT_DATE() THEN
     	UPDATE tabela_quartos
@@ -216,17 +231,15 @@ CREATE TRIGGER `disponibilidadeQuarto` AFTER INSERT ON `tabela_reservas` FOR EAC
     	WHERE quartos_id = new.reservas_quartosID;
      END IF;
 end
-//
+$$
 DELIMITER ;
-
-DELIMITER //
+DELIMITER $$
 CREATE TRIGGER `verificarAtualizacao` BEFORE UPDATE ON `tabela_reservas` FOR EACH ROW begin
 	CALL verificar_conflito_reserva(new.reservas_quartosID, new.reservas_dataEntrada, new.reservas_dataSaida);
 end
-//
+$$
 DELIMITER ;
-
-DELIMITER //
+DELIMITER $$
 CREATE TRIGGER `verificarDisponibilidade` BEFORE INSERT ON `tabela_reservas` FOR EACH ROW BEGIN
     CALL verificar_conflito_reserva(
         NEW.reservas_quartosID,
@@ -234,7 +247,7 @@ CREATE TRIGGER `verificarDisponibilidade` BEFORE INSERT ON `tabela_reservas` FOR
         NEW.reservas_dataSaida
     );
 END
-//
+$$
 DELIMITER ;
 
 --
@@ -252,6 +265,13 @@ ALTER TABLE `tabela_admin`
 --
 ALTER TABLE `tabela_clientes`
   ADD PRIMARY KEY (`clientes_id`);
+
+--
+-- Índices para tabela `tabela_pagamentos`
+--
+ALTER TABLE `tabela_pagamentos`
+  ADD PRIMARY KEY (`pagamentos_id`),
+  ADD KEY `pagamentos_clientesID` (`pagamentos_clientesID`);
 
 --
 -- Índices para tabela `tabela_quartos`
@@ -284,6 +304,12 @@ ALTER TABLE `tabela_clientes`
   MODIFY `clientes_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
+-- AUTO_INCREMENT de tabela `tabela_pagamentos`
+--
+ALTER TABLE `tabela_pagamentos`
+  MODIFY `pagamentos_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `tabela_quartos`
 --
 ALTER TABLE `tabela_quartos`
@@ -293,10 +319,17 @@ ALTER TABLE `tabela_quartos`
 -- AUTO_INCREMENT de tabela `tabela_reservas`
 --
 ALTER TABLE `tabela_reservas`
-  MODIFY `reservas_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `reservas_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
 --
 -- Restrições para despejos de tabelas
 --
+
+--
+-- Limitadores para a tabela `tabela_pagamentos`
+--
+ALTER TABLE `tabela_pagamentos`
+  ADD CONSTRAINT `tabela_pagamentos_ibfk_1` FOREIGN KEY (`pagamentos_clientesID`) REFERENCES `tabela_clientes` (`clientes_id`);
 
 --
 -- Limitadores para a tabela `tabela_reservas`
