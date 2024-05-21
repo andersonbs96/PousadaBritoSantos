@@ -134,9 +134,9 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
     }
     
     private void ReservaCancelar() {
-        int conf = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir este usuario?", "ATENÇÃO", JOptionPane.YES_NO_OPTION);
+        int conf = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir esta reserva?", "ATENÇÃO", JOptionPane.YES_NO_OPTION);
         if (conf == JOptionPane.YES_OPTION){
-            String sql = "DELETE FROM tabela_clientes WHERE clientes_id=?";
+            String sql = "DELETE FROM tabela_reservas WHERE reservas_id=?";
             
             try {
                 pst = conexao.prepareStatement(sql);
@@ -144,7 +144,7 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                 int del = pst.executeUpdate();
                 
                 if (del > 0){
-                    JOptionPane.showMessageDialog(null, "Cliente deletado com sucesso!");
+                    JOptionPane.showMessageDialog(null, "Reserva deletada com sucesso!");
                     reservaDataEntrada.setDate(null);
                     reservaDataSaida.setDate(null);
                     reservaClienteID.setText(null);
@@ -154,7 +154,7 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                 }
             }
             catch (Exception e){
-                JOptionPane.showMessageDialog(null, "Não possível deletar esse cliente!");
+                JOptionPane.showMessageDialog(null, "Não possível deletar essa reserva!");
             }
         }
     }
@@ -300,7 +300,7 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                         .addComponent(jLabel3))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(reservaID, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(btnBuscarReserva))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(reservaDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)

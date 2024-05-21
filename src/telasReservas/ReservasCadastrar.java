@@ -1,12 +1,15 @@
 
 package telasReservas;
 
+import com.toedter.calendar.JDateChooser;
 import conexao.ModuloConexao;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -74,30 +77,68 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
     
     public void ReservaCadastrar(){
         
-        try {   
-            String sql = "INSERT INTO tabela_reservas (reservas_dataEntrada, reservas_dataSaida, reservas_clientesID, reservas_quartosID) VALUES (?,?,?,?)";
-            pst = conexao.prepareStatement(sql);
+        try { 
+            int pagar = JOptionPane.showConfirmDialog(null, "O cliente vai pagar agora?", "Aviso!", JOptionPane.YES_NO_OPTION);
             
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            String dataEntrada = dateFormat.format(reservaDataEntrada.getDate());
-            String dataSaida = dateFormat.format(reservaDataSaida.getDate());
-            
-            int numeroClienteID = Integer.parseInt(reservaClienteID.getText());
-            int numeroQuartoID = Integer.parseInt(reservaQuartoID.getText());
-            
-            pst.setString(1, dataEntrada);
-            pst.setString(2, dataSaida);
-            pst.setInt(3, numeroClienteID);
-            pst.setInt(4, numeroQuartoID);
-            
-            int add = pst.executeUpdate();
-            
-            if (add > 0){
-                JOptionPane.showMessageDialog(null, "Reserva efetuada com sucesso!");
+            if (pagar == JOptionPane.YES_OPTION){
+                String sql = "INSERT INTO tabela_reservas (reservas_dataEntrada, reservas_dataSaida, reservas_clientesID, reservas_quartosID) VALUES (?,?,?,?)";
+                pst = conexao.prepareStatement(sql);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                String dataEntrada = dateFormat.format(reservaDataEntrada.getDate());
+                String dataSaida = dateFormat.format(reservaDataSaida.getDate());
+
+                int numeroClienteID = Integer.parseInt(reservaClienteID.getText());
+                int numeroQuartoID = Integer.parseInt(reservaQuartoID.getText());
+
+                pst.setString(1, dataEntrada);
+                pst.setString(2, dataSaida);
+                pst.setInt(3, numeroClienteID);
+                pst.setInt(4, numeroQuartoID);
+
+                int add = pst.executeUpdate();
+
+                if (add > 0){
+                    rs = pst.getGeneratedKeys();
+                    if (rs.next()){
+                        int numeroReservaID = rs.getInt(1);
+                        
+                        String sqlQuarto = "SELECT quartos_preco FROM tabelas_quartos WHERE quartos_id=?";
+                        pst = conexao.prepareStatement(sqlQuarto);
+                        pst.setInt(1, numeroQuartoID);
+                        rs = pst.executeQuery();
+                        if (rs.next()){
+                            double precoQuarto = rs.getDouble("quartos_preco");
+                            int diferencaDias = reservaDataSaida.getDate().compareTo(reservaDataEntrada.getDate());
+                            double valorTotal = precoQuarto * diferencaDias;
+                            
+                            String sqlPagamento = "INSERT INTO tabela_pagamentos (pagamentos_clienteID, pagamentos_reservasID, pagamentos_valorTotal, pagamentos_situacao) VALUES (?,?,?,?)";
+                            pst = conexao.prepareStatement(sqlPagamento);
+                            pst.setInt(1, numeroClienteID);
+                            pst.setInt(2, numeroReservaID);
+                            pst.setBigDecimal(3, BigDecimal.valueOf(valorTotal));
+                            pst.setString(4, "Pago");
+                        
+                            int addPagamento = pst.executeUpdate();
+                            if (addPagamento > 0){
+                                JOptionPane.showMessageDialog(null, "Reserva e pagamento efetuados com sucesso!");
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(null,"Reserva efetuada, mas não foi possível realizar o pagamento.");
+                            }
+                        }
+                         else {
+                            JOptionPane.showMessageDialog(null, "Não foi possível obter o preço do quarto!");
+                        }
+                    }
+                else {
+                    JOptionPane.showMessageDialog(null, "Não foi possível realizar a reserva");
+                }   
             }
             else {
-               JOptionPane.showMessageDialog(null, "Não foi possível realizar reservar");
-            }
+                JOptionPane.showMessageDialog(null, "Reserva efetuada sem pagamento.");
+                }   
+            }       
         }
         catch (Exception e){
             JOptionPane.showMessageDialog(null,"Erro ao reservar!");

@@ -1,14 +1,10 @@
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
---
-<<<<<<< HEAD
 -- Host: 127.0.0.1:3307
 -- Tempo de geração: 20-Maio-2024 às 23:32
-=======
 -- Host: localhost:3307
 -- Tempo de geração: 16-Maio-2024 às 16:56
->>>>>>> 14f198aa13cc5f8be944201d23277f6b98c7ae8a
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -26,11 +22,11 @@ SET time_zone = "+00:00";
 -- Banco de dados: `pousada`
 --
 
-DELIMITER $$
+DELIMITER //
 --
 -- Procedimentos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `verificar_conflito_reserva` (IN `quarto_id` INT, IN `data_entrada` DATE, IN `data_saida` DATE)   BEGIN
+CREATE PROCEDURE `verificar_conflito_reserva` (IN `quarto_id` INT, IN `data_entrada` DATE, IN `data_saida` DATE)   BEGIN
 	IF EXISTS (
         SELECT 1
         FROM tabela_reservas
@@ -43,8 +39,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `verificar_conflito_reserva` (IN `qu
     ) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Conflito de reserva: As datas de entrada e saída se sobrepõem com outra reserva.';
     END IF;
-END$$
-
+END;
+//
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -126,7 +122,6 @@ CREATE TABLE `tabela_quartos` (
 --
 
 INSERT INTO `tabela_quartos` (`quartos_id`, `quartos_numero`, `quartos_descricao`, `quartos_preco`, `quartos_disponibilidade`) VALUES
-<<<<<<< HEAD
 (1, '101', 'Quarto Simples com duas camas de solteiro', 250.00, 'Reservado'),
 (2, '102', 'Quarto Simples com duas camas de solteiro', 250.00, 'Reservado'),
 (3, '103', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
@@ -157,38 +152,6 @@ INSERT INTO `tabela_quartos` (`quartos_id`, `quartos_numero`, `quartos_descricao
 (28, '308', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
 (29, '309', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
 (30, '310', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel');
-=======
-(1, '101', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(2, '102', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(3, '103', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(4, '104', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(5, '105', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
-(6, '106', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
-(7, '107', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
-(8, '108', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
-(9, '109', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
-(10, '110', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
-(11, '201', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(12, '202', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(13, '203', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(14, '204', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(15, '205', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
-(16, '206', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
-(17, '207', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
-(18, '208', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
-(19, '209', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
-(20, '210', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
-(21, '301', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(22, '302', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(23, '303', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(24, '304', 'Quarto Simples com duas camas de solteiro', 250.00, 'disponivel'),
-(25, '305', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
-(26, '306', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
-(27, '307', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'disponivel'),
-(28, '308', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
-(29, '309', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel'),
-(30, '310', 'Quarto Simples com uma cama de casal', 250.00, 'disponivel');
->>>>>>> 14f198aa13cc5f8be944201d23277f6b98c7ae8a
 
 -- --------------------------------------------------------
 
@@ -209,22 +172,16 @@ CREATE TABLE `tabela_reservas` (
 --
 
 INSERT INTO `tabela_reservas` (`reservas_id`, `reservas_dataEntrada`, `reservas_dataSaida`, `reservas_clientesID`, `reservas_quartosID`) VALUES
-<<<<<<< HEAD
 (1, '2024-05-22', '2024-05-25', 1, 1),
 (2, '2024-05-28', '2024-05-31', 1, 8),
 (4, '2024-05-22', '2024-05-26', 2, 5),
 (5, '2024-05-25', '2024-05-28', 3, 1),
 (6, '2024-05-24', '2024-05-28', 4, 2);
-=======
-(5, '2024-05-14', '2024-05-18', 2, 1),
-(6, '2024-05-14', '2024-05-18', 2, 1);
->>>>>>> 14f198aa13cc5f8be944201d23277f6b98c7ae8a
 
 --
 -- Acionadores `tabela_reservas`
 --
-DELIMITER $$
-<<<<<<< HEAD
+DELIMITER //
 CREATE TRIGGER `atualizarDisponibilidade` AFTER UPDATE ON `tabela_reservas` FOR EACH ROW begin
 	IF new.reservas_dataEntrada <= CURRENT_DATE() and new.reservas_dataSaida > CURRENT_DATE() THEN
     	UPDATE tabela_quartos
@@ -239,14 +196,11 @@ CREATE TRIGGER `atualizarDisponibilidade` AFTER UPDATE ON `tabela_reservas` FOR 
         SET quartos_disponibilidade = 'Reservado'
         WHERE quartos_id = new.reservas_quartosID;
     END IF;
-=======
-CREATE TRIGGER `disponibilidadeQuarto` AFTER INSERT ON `tabela_reservas` FOR EACH ROW begin
-	UPDATE tabela_quartos SET quartos_disponibilidade = 'ocupado' WHERE reservas_quartoID = quartos_id;
->>>>>>> 14f198aa13cc5f8be944201d23277f6b98c7ae8a
 end
-$$
+//
 DELIMITER ;
-DELIMITER $$
+
+DELIMITER //
 CREATE TRIGGER `disponibilidadeQuarto` AFTER INSERT ON `tabela_reservas` FOR EACH ROW begin
 	IF new.reservas_dataEntrada <= CURRENT_DATE() and new.reservas_dataSaida > CURRENT_DATE() THEN
     	UPDATE tabela_quartos
@@ -262,15 +216,17 @@ CREATE TRIGGER `disponibilidadeQuarto` AFTER INSERT ON `tabela_reservas` FOR EAC
     	WHERE quartos_id = new.reservas_quartosID;
      END IF;
 end
-$$
+//
 DELIMITER ;
-DELIMITER $$
+
+DELIMITER //
 CREATE TRIGGER `verificarAtualizacao` BEFORE UPDATE ON `tabela_reservas` FOR EACH ROW begin
 	CALL verificar_conflito_reserva(new.reservas_quartosID, new.reservas_dataEntrada, new.reservas_dataSaida);
 end
-$$
+//
 DELIMITER ;
-DELIMITER $$
+
+DELIMITER //
 CREATE TRIGGER `verificarDisponibilidade` BEFORE INSERT ON `tabela_reservas` FOR EACH ROW BEGIN
     CALL verificar_conflito_reserva(
         NEW.reservas_quartosID,
@@ -278,7 +234,7 @@ CREATE TRIGGER `verificarDisponibilidade` BEFORE INSERT ON `tabela_reservas` FOR
         NEW.reservas_dataSaida
     );
 END
-$$
+//
 DELIMITER ;
 
 --
@@ -337,12 +293,7 @@ ALTER TABLE `tabela_quartos`
 -- AUTO_INCREMENT de tabela `tabela_reservas`
 --
 ALTER TABLE `tabela_reservas`
-<<<<<<< HEAD
   MODIFY `reservas_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-=======
-  MODIFY `reservas_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
->>>>>>> 14f198aa13cc5f8be944201d23277f6b98c7ae8a
-
 --
 -- Restrições para despejos de tabelas
 --
