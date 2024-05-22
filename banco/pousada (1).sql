@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3307
--- Tempo de geração: 21-Maio-2024 às 17:01
+-- Host: 127.0.0.1:3307
+-- Tempo de geração: 22-Maio-2024 às 23:53
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -105,6 +105,33 @@ INSERT INTO `tabela_clientes` (`clientes_id`, `clientes_nome`, `clientes_cpf`, `
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `tabela_clientespagamento`
+--
+
+CREATE TABLE `tabela_clientespagamento` (
+  `clientesPagamento_id` int(11) NOT NULL,
+  `clientesPagamento_clientesID` int(11) NOT NULL,
+  `clientesPagamento_metodo` varchar(50) NOT NULL,
+  `clientesPagamento_numeroCartao` char(16) DEFAULT NULL,
+  `clientesPagamento_nomeCartao` varchar(50) DEFAULT NULL,
+  `clientesPagamento_validadeCartao` date DEFAULT NULL,
+  `clientesPagamento_nomeBanco` varchar(100) DEFAULT NULL,
+  `clientesPagamento_dataPagamento` date DEFAULT curdate()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Acionadores `tabela_clientespagamento`
+--
+DELIMITER $$
+CREATE TRIGGER `atualizarPagamento` AFTER INSERT ON `tabela_clientespagamento` FOR EACH ROW begin
+	UPDATE tabela_pagamentos SET pagamentos_situacao = 'Pago' WHERE pagamentos_id = new.clientesPagamento_id;
+end
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `tabela_pagamentos`
 --
 
@@ -113,8 +140,28 @@ CREATE TABLE `tabela_pagamentos` (
   `pagamentos_reservasID` int(11) DEFAULT NULL,
   `pagamentos_clientesID` int(11) DEFAULT NULL,
   `pagamentos_valorTotal` decimal(10,2) NOT NULL,
-  `pagamentos_situacao` varchar(20) NOT NULL DEFAULT 'Pendente'
+  `pagamentos_situacao` varchar(20) NOT NULL DEFAULT 'Pendente',
+  `pagamentos_dataReserva` date DEFAULT curdate()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Acionadores `tabela_pagamentos`
+--
+DELIMITER $$
+CREATE TRIGGER `deletarPagamento` AFTER INSERT ON `tabela_pagamentos` FOR EACH ROW begin
+	DECLARE pagamentoData DATE;
+    DECLARE pagamentoReserva DATE;
+    
+	SELECT pagamentos_dataReserva INTO pagamentoReserva FROM tabela_pagamentos WHERE pagamentos_id = new.pagamentos_id and pagamentos_situacao = 'Pendente';
+   
+   SET pagamentoData = CURRENT_DATE();
+   
+   IF DATEDIFF(pagamentoData, pagamentoReserva) > 3 THEN
+   		DELETE FROM tabela_reservas WHERE reservas_id = new.pagamentos_reservasID;
+   END IF;
+end
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -135,17 +182,17 @@ CREATE TABLE `tabela_quartos` (
 --
 
 INSERT INTO `tabela_quartos` (`quartos_id`, `quartos_numero`, `quartos_descricao`, `quartos_preco`, `quartos_disponibilidade`) VALUES
-(1, '101', 'Quarto Simples com duas camas de solteiro', 250.00, 'Reservado'),
-(2, '102', 'Quarto Simples com duas camas de solteiro', 250.00, 'Reservado'),
+(1, '101', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
+(2, '102', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
 (3, '103', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
 (4, '104', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
-(5, '105', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Ocupado'),
+(5, '105', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
 (6, '106', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
 (7, '107', 'Quarto Simples com uma cama de casal e uma solteiro', 250.00, 'Disponivel'),
-(8, '108', 'Quarto Simples com uma cama de casal', 250.00, 'Ocupado'),
+(8, '108', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
 (9, '109', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
 (10, '110', 'Quarto Simples com uma cama de casal', 250.00, 'Disponivel'),
-(11, '201', 'Quarto Simples com duas camas de solteiro', 250.00, 'Reservado'),
+(11, '201', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
 (12, '202', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
 (13, '203', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
 (14, '204', 'Quarto Simples com duas camas de solteiro', 250.00, 'Disponivel'),
@@ -181,24 +228,10 @@ CREATE TABLE `tabela_reservas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `tabela_reservas`
---
-
-INSERT INTO `tabela_reservas` (`reservas_id`, `reservas_dataEntrada`, `reservas_dataSaida`, `reservas_clientesID`, `reservas_quartosID`) VALUES
-(1, '2024-05-22', '2024-05-25', 1, 1),
-(2, '2024-05-28', '2024-05-31', 1, 8),
-(4, '2024-05-22', '2024-05-26', 2, 5),
-(5, '2024-05-25', '2024-05-28', 3, 1),
-(6, '2024-05-24', '2024-05-28', 4, 2),
-(7, '2024-07-08', '2024-07-12', 5, 11),
-(8, '2024-06-04', '2024-05-08', 6, 30),
-(9, '2024-05-13', '2024-05-16', 7, 12);
-
---
 -- Acionadores `tabela_reservas`
 --
 DELIMITER $$
-CREATE TRIGGER `atualizarDisponibilidade` AFTER UPDATE ON `tabela_reservas` FOR EACH ROW begin
+CREATE TRIGGER `atualizarReserva` AFTER UPDATE ON `tabela_reservas` FOR EACH ROW begin
 	IF new.reservas_dataEntrada <= CURRENT_DATE() and new.reservas_dataSaida > CURRENT_DATE() THEN
     	UPDATE tabela_quartos
         SET quartos_disponibilidade = 'Ocupado'
@@ -216,7 +249,15 @@ end
 $$
 DELIMITER ;
 DELIMITER $$
-CREATE TRIGGER `disponibilidadeQuarto` AFTER INSERT ON `tabela_reservas` FOR EACH ROW begin
+CREATE TRIGGER `deletarReserva` AFTER DELETE ON `tabela_reservas` FOR EACH ROW begin
+	UPDATE tabela_quartos 
+    SET quartos_disponibilidade = 'Disponivel'
+    WHERE quartos_id = old.reservas_quartosID;
+end
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `inserirReserva` AFTER INSERT ON `tabela_reservas` FOR EACH ROW begin
 	IF new.reservas_dataEntrada <= CURRENT_DATE() and new.reservas_dataSaida > CURRENT_DATE() THEN
     	UPDATE tabela_quartos
         SET quartos_disponibilidade = 'Ocupado'
@@ -234,13 +275,28 @@ end
 $$
 DELIMITER ;
 DELIMITER $$
+CREATE TRIGGER `reservaPagamento` AFTER INSERT ON `tabela_reservas` FOR EACH ROW begin
+	DECLARE quarto_preco DECIMAL(10, 2);
+	DECLARE valor_total DECIMAL(10, 2);
+    
+	SELECT quartos_preco into quarto_preco from tabela_quartos WHERE quartos_id = new.reservas_quartosID;
+    
+    SET valor_total = DATEDIFF(new.reservas_dataSaida, new.reservas_dataEntrada) * quarto_preco;
+    
+	INSERT INTO tabela_pagamentos (pagamentos_reservasID, pagamentos_clientesID, pagamentos_valorTotal, pagamentos_situacao)
+    VALUES
+    (new.reservas_id, new.reservas_clientesID, valor_total, 'pendente');
+end
+$$
+DELIMITER ;
+DELIMITER $$
 CREATE TRIGGER `verificarAtualizacao` BEFORE UPDATE ON `tabela_reservas` FOR EACH ROW begin
 	CALL verificar_conflito_reserva(new.reservas_quartosID, new.reservas_dataEntrada, new.reservas_dataSaida);
 end
 $$
 DELIMITER ;
 DELIMITER $$
-CREATE TRIGGER `verificarDisponibilidade` BEFORE INSERT ON `tabela_reservas` FOR EACH ROW BEGIN
+CREATE TRIGGER `verificarInsercao` BEFORE INSERT ON `tabela_reservas` FOR EACH ROW BEGIN
     CALL verificar_conflito_reserva(
         NEW.reservas_quartosID,
         NEW.reservas_dataEntrada,
@@ -267,11 +323,19 @@ ALTER TABLE `tabela_clientes`
   ADD PRIMARY KEY (`clientes_id`);
 
 --
+-- Índices para tabela `tabela_clientespagamento`
+--
+ALTER TABLE `tabela_clientespagamento`
+  ADD PRIMARY KEY (`clientesPagamento_id`),
+  ADD KEY `clientesPagamento_clientesID` (`clientesPagamento_clientesID`);
+
+--
 -- Índices para tabela `tabela_pagamentos`
 --
 ALTER TABLE `tabela_pagamentos`
   ADD PRIMARY KEY (`pagamentos_id`),
-  ADD KEY `pagamentos_clientesID` (`pagamentos_clientesID`);
+  ADD KEY `pagamentos_clientesID` (`pagamentos_clientesID`),
+  ADD KEY `pagamentos_reservasID` (`pagamentos_reservasID`);
 
 --
 -- Índices para tabela `tabela_quartos`
@@ -304,10 +368,16 @@ ALTER TABLE `tabela_clientes`
   MODIFY `clientes_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
+-- AUTO_INCREMENT de tabela `tabela_clientespagamento`
+--
+ALTER TABLE `tabela_clientespagamento`
+  MODIFY `clientesPagamento_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `tabela_pagamentos`
 --
 ALTER TABLE `tabela_pagamentos`
-  MODIFY `pagamentos_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `pagamentos_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `tabela_quartos`
@@ -319,16 +389,23 @@ ALTER TABLE `tabela_quartos`
 -- AUTO_INCREMENT de tabela `tabela_reservas`
 --
 ALTER TABLE `tabela_reservas`
-  MODIFY `reservas_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `reservas_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Restrições para despejos de tabelas
 --
 
 --
+-- Limitadores para a tabela `tabela_clientespagamento`
+--
+ALTER TABLE `tabela_clientespagamento`
+  ADD CONSTRAINT `tabela_clientespagamento_ibfk_1` FOREIGN KEY (`clientesPagamento_clientesID`) REFERENCES `tabela_clientes` (`clientes_id`);
+
+--
 -- Limitadores para a tabela `tabela_pagamentos`
 --
 ALTER TABLE `tabela_pagamentos`
+  ADD CONSTRAINT `pagamentos_reservasID` FOREIGN KEY (`pagamentos_reservasID`) REFERENCES `tabela_reservas` (`reservas_id`),
   ADD CONSTRAINT `tabela_pagamentos_ibfk_1` FOREIGN KEY (`pagamentos_clientesID`) REFERENCES `tabela_clientes` (`clientes_id`);
 
 --

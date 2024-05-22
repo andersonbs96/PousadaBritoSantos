@@ -129,7 +129,7 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
             pst.setInt(4, numeroQuartoID);
         }
         catch (Exception e) {
-            
+             JOptionPane.showMessageDialog(null, "Não Possível atualizar a reserva!");
         }
     }
     

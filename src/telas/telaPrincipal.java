@@ -5,6 +5,7 @@ package telas;
 import javax.swing.JOptionPane;
 import telasClientes.ClienteCadastro;
 import telasClientes.ClientesVisualizar;
+import telasPagamentos.PagamentosVisualizar;
 import telasQuartos.QuartosVisualizar;
 import telasReservas.ReservasCadastrar;
 import telasReservas.ReservasVisualizar;
@@ -23,7 +24,7 @@ public class telaPrincipal extends javax.swing.JFrame {
 
         Desktop = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        menuClientes = new javax.swing.JMenu();
         itemClienteCadastrar = new javax.swing.JMenuItem();
         itemClienteVisualizar = new javax.swing.JMenuItem();
         menuReservas = new javax.swing.JMenu();
@@ -31,6 +32,8 @@ public class telaPrincipal extends javax.swing.JFrame {
         itemReservaVisualizar = new javax.swing.JMenuItem();
         menuQuartos = new javax.swing.JMenu();
         itemQuartosDisponivel = new javax.swing.JMenuItem();
+        menuPagamentos = new javax.swing.JMenu();
+        itemPagamentos = new javax.swing.JMenuItem();
         menuSobre = new javax.swing.JMenu();
         menuSair = new javax.swing.JMenu();
         itemOpcoesSair = new javax.swing.JMenuItem();
@@ -49,12 +52,7 @@ public class telaPrincipal extends javax.swing.JFrame {
             .addGap(0, 723, Short.MAX_VALUE)
         );
 
-        jMenu1.setText("Clientes");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
-            }
-        });
+        menuClientes.setText("Clientes");
 
         itemClienteCadastrar.setText("Cadastrar");
         itemClienteCadastrar.addActionListener(new java.awt.event.ActionListener() {
@@ -62,7 +60,7 @@ public class telaPrincipal extends javax.swing.JFrame {
                 itemClienteCadastrarActionPerformed(evt);
             }
         });
-        jMenu1.add(itemClienteCadastrar);
+        menuClientes.add(itemClienteCadastrar);
 
         itemClienteVisualizar.setText("Visualizar");
         itemClienteVisualizar.addActionListener(new java.awt.event.ActionListener() {
@@ -70,9 +68,9 @@ public class telaPrincipal extends javax.swing.JFrame {
                 itemClienteVisualizarActionPerformed(evt);
             }
         });
-        jMenu1.add(itemClienteVisualizar);
+        menuClientes.add(itemClienteVisualizar);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(menuClientes);
 
         menuReservas.setText("Reservas");
 
@@ -106,15 +104,22 @@ public class telaPrincipal extends javax.swing.JFrame {
 
         jMenuBar1.add(menuQuartos);
 
+        menuPagamentos.setText("Pagamentos");
+
+        itemPagamentos.setText("Visualizar");
+        itemPagamentos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemPagamentosActionPerformed(evt);
+            }
+        });
+        menuPagamentos.add(itemPagamentos);
+
+        jMenuBar1.add(menuPagamentos);
+
         menuSobre.setText("Sobre");
         jMenuBar1.add(menuSobre);
 
         menuSair.setText("Opções");
-        menuSair.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuSairActionPerformed(evt);
-            }
-        });
 
         itemOpcoesSair.setText("Sair");
         itemOpcoesSair.addActionListener(new java.awt.event.ActionListener() {
@@ -149,10 +154,6 @@ public class telaPrincipal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void menuSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSairActionPerformed
-        
-    }//GEN-LAST:event_menuSairActionPerformed
-
     private void itemReservaVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemReservaVisualizarActionPerformed
         ReservasVisualizar visualizar = new ReservasVisualizar();
         visualizar.setVisible(true);
@@ -181,10 +182,6 @@ public class telaPrincipal extends javax.swing.JFrame {
         Desktop.add(clienteCadastrar);
     }//GEN-LAST:event_itemClienteCadastrarActionPerformed
 
-    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenu1ActionPerformed
-
     private void itemClienteVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemClienteVisualizarActionPerformed
         ClientesVisualizar clientesVisualizar = new ClientesVisualizar();
         clientesVisualizar.setVisible(true);
@@ -196,6 +193,12 @@ public class telaPrincipal extends javax.swing.JFrame {
         reservaCadastrar.setVisible(true);
         Desktop.add(reservaCadastrar);
     }//GEN-LAST:event_itemReservasFazerActionPerformed
+
+    private void itemPagamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPagamentosActionPerformed
+        PagamentosVisualizar pagamentosVisualizar = new PagamentosVisualizar();
+        pagamentosVisualizar.setVisible(true);
+        Desktop.add(pagamentosVisualizar);
+    }//GEN-LAST:event_itemPagamentosActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -234,11 +237,13 @@ public class telaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemClienteCadastrar;
     private javax.swing.JMenuItem itemClienteVisualizar;
     private javax.swing.JMenuItem itemOpcoesSair;
+    private javax.swing.JMenuItem itemPagamentos;
     private javax.swing.JMenuItem itemQuartosDisponivel;
     private javax.swing.JMenuItem itemReservaVisualizar;
     private javax.swing.JMenuItem itemReservasFazer;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu menuClientes;
+    private javax.swing.JMenu menuPagamentos;
     private javax.swing.JMenu menuQuartos;
     private javax.swing.JMenu menuReservas;
     private javax.swing.JMenu menuSair;
