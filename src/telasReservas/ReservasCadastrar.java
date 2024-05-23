@@ -72,15 +72,14 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
     }
     
     public void ReservaCadastrar(){
-        String sql = "INSERT INTO tabela_reservas "
-                + "(reservas_dataEntrada, reservas_dataSaida, reservas_clientesID, reservas_quartosID) VALUES (?,?,?,?)";
         try {
+            String sql = "INSERT INTO tabela_reservas(reservas_dataEntrada, reservas_dataSaida, reservas_clientesID, reservas_quartosID) VALUES (?,?,?,?)";
             pst = conexao.prepareStatement(sql);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String dataEntrada = dateFormat.format(reservaDataEntrada.getDate());
             String dataSaida = dateFormat.format(reservaDataSaida.getDate());
-
+            
             int numeroClienteID = Integer.parseInt(reservaClienteID.getText());
             int numeroQuartoID = Integer.parseInt(reservaQuartoID.getText());
 
@@ -88,9 +87,9 @@ public class ReservasCadastrar extends javax.swing.JInternalFrame {
             pst.setString(2, dataSaida);
             pst.setInt(3, numeroClienteID);
             pst.setInt(4, numeroQuartoID);
-
+            
+            
             int add = pst.executeUpdate();
-
             if (add > 0){
                 JOptionPane.showMessageDialog(null, "Reserva efetuada com sucesso");   
             }

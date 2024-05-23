@@ -17,8 +17,24 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
         initComponents();
         conexao = ModuloConexao.conector();
         Reserva();
+        Contador();
     }
     
+    private void Contador(){
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM tabela_reservas"; // Adicionei um alias para o resultado da contagem
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+        
+            if (rs.next()) {
+                int count = rs.getInt("count"); // Obter o valor contado da coluna count
+                labelContagem.setText(String.valueOf(count)); // Atualizar o texto do JLabel com o valor contado
+            }
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Não é possível contar o número de reservas!");
+        }
+    }
     private void Reserva(){
         try {
             String sql = "SELECT tabela_reservas.*, tabela_clientes.clientes_nome, tabela_quartos.quartos_numero " +
@@ -192,6 +208,8 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaReservas = new javax.swing.JTable();
+        jLabel8 = new javax.swing.JLabel();
+        labelContagem = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("RESERVA");
@@ -413,6 +431,8 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                 .addGap(182, 182, 182))
         );
 
+        jLabel8.setText("Número de Reservas");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -421,7 +441,13 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(18, 18, 18)
+                        .addComponent(labelContagem, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -432,6 +458,10 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelContagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -482,10 +512,12 @@ public class ReservasVisualizar extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelContagem;
     private javax.swing.JTextField reservaClienteID;
     private javax.swing.JTextField reservaClienteNome;
     private com.toedter.calendar.JDateChooser reservaDataEntrada;

@@ -12,7 +12,7 @@ public class ClienteCadastro extends javax.swing.JInternalFrame {
         initComponents();
         conexao = ModuloConexao.conector();
     }
- 
+    
     public class CPFValidator {
         public static boolean validarCPF(String cpf_str) {
             // Verificar se o CPF tem 11 dígitos
@@ -58,6 +58,7 @@ public class ClienteCadastro extends javax.swing.JInternalFrame {
             }
         }
     }
+    
     private void ClientesCadastrar(){
         String cpf = clienteCPF.getText();
         boolean cpfValido = CPFValidator.validarCPF(cpf);
@@ -65,7 +66,6 @@ public class ClienteCadastro extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "CPF inválido. Por favor, insira um CPF válido.");
             return;
         }
-        
             try {
                 String sql = "INSERT INTO tabela_clientes (clientes_nome, clientes_cpf, clientes_endereco, clientes_ddd, clientes_telefone, clientes_cidade, clientes_estado, clientes_email) VALUES (?,?,?,?,?,?,?,?)";
                 pst = conexao.prepareStatement(sql);
